@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NLC Performance Protocol</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #e2e8f0; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .active-day { border-left: 4px solid #3b82f6; background: rgba(59, 130, 246, 0.1); }
+    </style>
+</head>
+<body class="min-h-screen pb-20">
+
+    <!-- Header -->
+    <header class="p-6 pb-2 sticky top-0 z-50 bg-[#0f172a]/95 border-b border-gray-800">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-extrabold text-blue-500 tracking-tight">NLC <span class="text-white">PERFORMANCE</span></h1>
+                <p class="text-xs text-gray-400 font-mono mt-1">BEAST TAMER & SFG I PREP</p>
+            </div>
+            <div class="text-right">
+                <div id="clock" class="text-xl font-bold">00:00</div>
+                <div id="date" class="text-xs text-gray-400">Loading...</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="p-4 space-y-6">
+
+        <!-- Section 1: Daily Bio-Hacks (Energy Plan) -->
+        <section>
+            <h2 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3"><i class="fas fa-bolt text-yellow-500 mr-2"></i>Daily Energy Protocol</h2>
+            <div class="glass rounded-xl p-4 space-y-4">
+                
+                <!-- Morning Stack -->
+                <div class="flex items-center space-x-4">
+                    <div class="bg-yellow-500/20 p-3 rounded-lg text-yellow-500"><i class="fas fa-coffee"></i></div>
+                    <div>
+                        <h3 class="font-bold text-white">Morning Stack (06:00)</h3>
+                        <p class="text-xs text-gray-400">Coffee + <span class="text-green-400">L-Theanine (200mg)</span> + <span class="text-blue-400">Creatine (5g)</span></p>
+                    </div>
+                </div>
+
+                <div class="h-px bg-gray-700"></div>
+
+                <!-- Hydration & Lunch -->
+                <div class="flex items-center space-x-4">
+                    <div class="bg-blue-500/20 p-3 rounded-lg text-blue-500"><i class="fas fa-tint"></i></div>
+                    <div>
+                        <h3 class="font-bold text-white">School Day Fuel</h3>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>• 2L Water + Electrolytes <span class="text-red-400">before 14:00</span></li>
+                            <li>• <strong>Lunch:</strong> High Protein / Low Carb (Avoid crash)</li>
+                            <li>• <strong>Caffeine Cut-off:</strong> 12:00 PM Sharp</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="h-px bg-gray-700"></div>
+
+                <!-- Evening Rule -->
+                <div class="flex items-center space-x-4">
+                    <div class="bg-purple-500/20 p-3 rounded-lg text-purple-500"><i class="fas fa-utensils"></i></div>
+                    <div>
+                        <h3 class="font-bold text-white">The Golden Rule</h3>
+                        <p class="text-xs text-gray-400">Tue/Wed: <strong>Cook Dinner BEFORE Training</strong> (18:00)</p>
+                        <p class="text-xs text-gray-500 mt-1">Post-Workout: Fast Carbs (Rice/Fruit)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Today's Focus (Dynamic) -->
+        <section>
+            <h2 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3"><i class="fas fa-calendar-day text-blue-500 mr-2"></i>Weekly Schedule</h2>
+            <div class="glass rounded-xl overflow-hidden" id="weekly-schedule">
+                <!-- JS will highlight the current day -->
+                <div class="day-row p-3 border-b border-gray-700/50 flex justify-between items-center" data-day="1">
+                    <div><span class="text-blue-400 font-bold w-8 inline-block">MON</span> <span class="text-sm">Beast Strength (13:30)</span></div>
+                    <span class="text-xs bg-blue-900 text-blue-200 px-2 py-1 rounded">GYM</span>
+                </div>
+                <div class="day-row p-3 border-b border-gray-700/50 flex justify-between items-center bg-purple-900/10" data-day="1">
+                    <div class="pl-8"><span class="text-purple-400 font-bold text-xs">PM</span> <span class="text-sm">NLC Deep Work</span></div>
+                    <span class="text-xs bg-purple-900 text-purple-200 px-2 py-1 rounded">BIZ</span>
+                </div>
+
+                <div class="day-row p-3 border-b border-gray-700/50 flex justify-between items-center" data-day="2">
+                    <div><span class="text-gray-400 font-bold w-8 inline-block">TUE</span> <span class="text-sm">BJJ (19:00)</span></div>
+                    <span class="text-xs bg-red-900 text-red-200 px-2 py-1 rounded">MAT</span>
+                </div>
+                
+                <div class="day-row p-3 border-b border-gray-700/50 flex justify-between items-center" data-day="3">
+                    <div><span class="text-gray-400 font-bold w-8 inline-block">WED</span> <span class="text-sm">BJJ or NLC Work</span></div>
+                    <span class="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded">VARIES</span>
+                </div>
+
+                <div class="day-row p-3 border-b border-gray-700/50 flex justify-between items-center" data-day="4">
+                    <div><span class="text-blue-400 font-bold w-8 inline-block">THU</span> <span class="text-sm">SFG I Capacity (19:30)</span></div>
+                    <span class="text-xs bg-blue-900 text-blue-200 px-2 py-1 rounded">GYM</span>
+                </div>
+                <div class="day-row p-3 border-b border-gray-700/50 flex justify-between items-center bg-purple-900/10" data-day="4">
+                     <div class="pl-8"><span class="text-purple-400 font-bold text-xs">PM</span> <span class="text-sm">NLC Business</span></div>
+                </div>
+
+                <div class="day-row p-3 border-b border-gray-700/50 flex justify-between items-center" data-day="5">
+                    <div><span class="text-gray-400 font-bold w-8 inline-block">FRI</span> <span class="text-sm">NLC Admin / Rest</span></div>
+                    <span class="text-xs bg-purple-900 text-purple-200 px-2 py-1 rounded">BIZ</span>
+                </div>
+
+                <div class="day-row p-3 border-b border-gray-700/50 flex justify-between items-center" data-day="6">
+                    <div><span class="text-gray-400 font-bold w-8 inline-block">SAT</span> <span class="text-sm">BJJ (10:30)</span></div>
+                    <span class="text-xs bg-red-900 text-red-200 px-2 py-1 rounded">MAT</span>
+                </div>
+
+                <div class="day-row p-3 flex justify-between items-center" data-day="0">
+                    <div><span class="text-green-400 font-bold w-8 inline-block">SUN</span> <span class="text-sm">Zone 2 Run & Meal Prep</span></div>
+                    <span class="text-xs bg-green-900 text-green-200 px-2 py-1 rounded">REC</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: The Training Programs (Collapsible) -->
+        <section class="space-y-4">
+            <h2 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3"><i class="fas fa-dumbbell text-red-500 mr-2"></i>The Protocols (Weeks 1-8)</h2>
+            
+            <!-- Beast Session Card -->
+            <div class="glass rounded-xl overflow-hidden border-l-4 border-blue-500">
+                <details class="group">
+                    <summary class="flex justify-between items-center p-4 cursor-pointer list-none">
+                        <div>
+                            <h3 class="font-bold text-lg">Monday: The Beast</h3>
+                            <p class="text-xs text-blue-400">Max Strength & Neural Drive</p>
+                        </div>
+                        <span class="transition group-open:rotate-180"><i class="fas fa-chevron-down"></i></span>
+                    </summary>
+                    <div class="p-4 pt-0 text-sm space-y-4 border-t border-gray-700 mt-2">
+                        <div class="bg-blue-900/20 p-3 rounded text-blue-200 text-xs mb-2">
+                            <i class="fas fa-exclamation-circle mr-1"></i> RPE 7-8/10. Do not go to failure. Rest 3-5 mins.
+                        </div>
+                        
+                        <div>
+                            <p class="font-bold text-gray-300">1. Warm-up (5m)</p>
+                            <p class="text-gray-500">Breathing + 90/90 Hips + Band Pull-aparts</p>
+                        </div>
+
+                        <div>
+                            <p class="font-bold text-gray-300">2. The Main Lifts</p>
+                            <ul class="space-y-2 mt-1">
+                                <li class="flex justify-between border-b border-gray-700 pb-1">
+                                    <span>A1. Wtd Tactical Pull-up</span>
+                                    <span class="font-mono text-white">5 x 2</span>
+                                </li>
+                                <li class="flex justify-between border-b border-gray-700 pb-1">
+                                    <span>A2. Dbl KB Press</span>
+                                    <span class="font-mono text-white">5 x 2-3</span>
+                                </li>
+                                <li class="flex justify-between border-b border-gray-700 pb-1">
+                                    <span>A3. Dbl KB Front Squat</span>
+                                    <span class="font-mono text-white">5 x 3</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <p class="font-bold text-gray-300">3. Finisher</p>
+                            <div class="flex justify-between">
+                                <span>Heavy Suitcase Carry</span>
+                                <span class="font-mono text-white">3 x 30s / side</span>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <!-- SFG Session Card -->
+            <div class="glass rounded-xl overflow-hidden border-l-4 border-red-500">
+                <details class="group">
+                    <summary class="flex justify-between items-center p-4 cursor-pointer list-none">
+                        <div>
+                            <h3 class="font-bold text-lg">Thursday: Capacity</h3>
+                            <p class="text-xs text-red-400">SFG I Ballistics (A+A)</p>
+                        </div>
+                        <span class="transition group-open:rotate-180"><i class="fas fa-chevron-down"></i></span>
+                    </summary>
+                    <div class="p-4 pt-0 text-sm space-y-4 border-t border-gray-700 mt-2">
+                        <div class="bg-red-900/20 p-3 rounded text-red-200 text-xs mb-2">
+                            <i class="fas fa-fire mr-1"></i> Focus on crisp power. If power drops, stop.
+                        </div>
+
+                        <div>
+                            <p class="font-bold text-gray-300">1. Tech Primer</p>
+                            <div class="flex justify-between border-b border-gray-700 pb-1">
+                                <span>1-Arm Snatch (Crisp)</span>
+                                <span class="font-mono text-white">5 x 3 / side</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p class="font-bold text-gray-300">2. The Engine (EMOM)</p>
+                            <p class="text-xs text-gray-500 mb-1">Heavy 1-Arm Swings. 10 reps every minute.</p>
+                            <div class="grid grid-cols-2 gap-2 text-xs text-center mt-2">
+                                <div class="bg-gray-800 p-1 rounded">Wk 1-2: 10 mins</div>
+                                <div class="bg-gray-800 p-1 rounded">Wk 3-4: 12 mins</div>
+                                <div class="bg-gray-800 p-1 rounded">Wk 5-6: 14 mins</div>
+                                <div class="bg-gray-800 p-1 rounded">Wk 7-8: 16 mins</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p class="font-bold text-gray-300">3. Stabilizer</p>
+                            <div class="flex justify-between">
+                                <span>TGU (Continuous)</span>
+                                <span class="font-mono text-white">10 mins</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <p class="font-bold text-green-400">4. Recovery</p>
+                            <p class="text-xs">Box Breathing (4-4-4-4) x 5 mins</p>
+                        </div>
+                    </div>
+                </details>
+            </div>
+            
+             <!-- Sunday Session Card -->
+            <div class="glass rounded-xl overflow-hidden border-l-4 border-green-500">
+                <details class="group">
+                    <summary class="flex justify-between items-center p-4 cursor-pointer list-none">
+                        <div>
+                            <h3 class="font-bold text-lg">Sunday: Zone 2</h3>
+                            <p class="text-xs text-green-400">Recovery & Skill</p>
+                        </div>
+                        <span class="transition group-open:rotate-180"><i class="fas fa-chevron-down"></i></span>
+                    </summary>
+                    <div class="p-4 pt-0 text-sm space-y-4 border-t border-gray-700 mt-2">
+                        <div>
+                            <p class="font-bold text-gray-300">1. Cardio</p>
+                            <div class="flex justify-between border-b border-gray-700 pb-1">
+                                <span>Run / Ruck (Nasal Only)</span>
+                                <span class="font-mono text-white">45-60 mins</span>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">HR Target: 120-135 BPM</p>
+                        </div>
+
+                        <div>
+                            <p class="font-bold text-gray-300">2. Grease the Groove</p>
+                            <div class="flex justify-between">
+                                <span>Pistol Squats (Practice)</span>
+                                <span class="font-mono text-white">3-5 singles / day</span>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+        </section>
+        
+        <!-- Section 4: Progression Logic -->
+         <section>
+            <h2 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3"><i class="fas fa-chart-line text-purple-500 mr-2"></i>8-Week Step Loading</h2>
+            <div class="glass rounded-xl p-4 text-sm">
+                <div class="flex items-start mb-4">
+                    <div class="min-w-[4rem] font-bold text-white">Wk 1</div>
+                    <div class="text-gray-400">Baseline. Leave 2-3 reps in reserve.</div>
+                </div>
+                <div class="flex items-start mb-4">
+                    <div class="min-w-[4rem] font-bold text-white">Wk 2</div>
+                    <div class="text-gray-400">Micro-load (Add 1-2kg). Extend swings.</div>
+                </div>
+                <div class="flex items-start mb-4">
+                    <div class="min-w-[4rem] font-bold text-white">Wk 3</div>
+                    <div class="text-gray-400">Intensify. Weight up. Extend swings.</div>
+                </div>
+                <div class="flex items-start mb-4 bg-green-900/20 p-2 rounded -mx-2">
+                    <div class="min-w-[4rem] font-bold text-green-400">Wk 4</div>
+                    <div class="text-green-200">DELOAD. Cut sets/volume by 50%.</div>
+                </div>
+                <div class="flex items-start mt-4">
+                    <div class="min-w-[4rem] font-bold text-white">Wk 5-8</div>
+                    <div class="text-gray-400">Repeat cycle starting heavier than Wk 1.</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Clock
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('date').innerText = now.toLocaleDateString([], {weekday: 'long', month: 'short', day: 'numeric'});
+            
+            // Highlight current day
+            const dayIndex = now.getDay(); // 0 is Sunday, 1 is Monday...
+            document.querySelectorAll('.day-row').forEach(row => {
+                row.classList.remove('active-day');
+                if (parseInt(row.dataset.day) === dayIndex) {
+                    row.classList.add('active-day');
+                }
+            });
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+    </script>
+</body>
+</html>

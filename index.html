@@ -16,6 +16,7 @@
         .tab-active { background-color: #f97316; color: white; box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.2); }
         .tab-inactive { background-color: #1e293b; color: #94a3b8; }
         .tab-inactive:hover { background-color: #334155; }
+        .animate-pulse-slow { animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 antialiased min-h-screen">
@@ -23,7 +24,7 @@
 
     <script type="text/babel">
         const { useState } = React;
-        const { Dumbbell, Activity, Moon, Sun, Coffee, Brain, Shield, Wind, AlertCircle, PlayCircle, Battery } = window;
+        const apiKey = ""; // System will inject key at runtime
 
         // Icons as inline SVGs for stability
         const Icon = ({ name, className }) => {
@@ -38,7 +39,8 @@
                 wind: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg>,
                 shield: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
                 brain: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>,
-                droplet: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>
+                droplet: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>,
+                sparkles: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M9 3v4"/><path d="M3 7h6"/></svg>
             };
             return icons[name] || null;
         };
@@ -46,6 +48,9 @@
         const Dashboard = () => {
             const [activeTab, setActiveTab] = useState('schedule');
             const [selectedDay, setSelectedDay] = useState('Mon');
+            const [coachInput, setCoachInput] = useState('');
+            const [coachResponse, setCoachResponse] = useState('');
+            const [isCoachLoading, setIsCoachLoading] = useState(false);
 
             const schedule = {
                 Mon: { title: "Strength A (Heavy)", icon: "dumbbell", color: "text-orange-500", time: "15:00", details: "Fresh CNS. Press, Pull, Box Pistol. Long Rest.", note: "Business Block @ 19:30" },
@@ -76,6 +81,16 @@
                         { name: "Turkish Get-up", detail: "10 mins continuous flow", note: "Moderate weight. Fluidity focus." }
                     ]
                 },
+                C: {
+                    title: "Session C: The Wednesday Wrench",
+                    focus: "Hybrid Bulletproofing (Paul Chek Approved)",
+                    exercises: [
+                        { name: "1. Suitcase Carries", detail: "3 rounds x 40m/side @ 32kg+", note: "Targets QL and Grip. Spine straight." },
+                        { name: "2. KB Windmill/Triangle", detail: "3 rounds x 5 reps/side", note: "Targets 'Serape Effect' (Rotation)." },
+                        { name: "3. Neck Flexion/Ext", detail: "3 rounds x 30s Hold", note: "Critical for BJJ longevity." },
+                        { name: "4. Shinbox Flow", detail: "3 mins continuous", note: "Hip internal/external rotation." }
+                    ]
+                },
                 Recovery: {
                     title: "The Lymphatic Flush",
                     focus: "When 'Wired' or Run Down",
@@ -101,6 +116,54 @@
                 { title: "Hypnosis / Nidra", rule: "Interoception Focus", action: "Primary: Loren Runion (Nervous System Reset). Secondary: Glenn Harrold (Acute Stress Flush)." }
             ];
 
+            const handleConsultCoach = async () => {
+                if (!coachInput.trim()) return;
+                setIsCoachLoading(true);
+                setCoachResponse('');
+
+                const systemPrompt = `
+You are the NLC Performance Head Coach.
+User Profile: 43-year-old male, "Sentinel" genotype (Slow COMT/Worrier). High Testosterone, High SHBG.
+Goals: Beast Tamer (Press, Pull, Pistol), BJJ Purple Belt.
+Constraint: Meniscus tear (Left knee), Gut issues (Left shoulder referral).
+Philosophy: "Build the Engine, Don't Burn the Chassis." Alactic training only. No acid/burn.
+Role: Provide concise, high-performance triage. Do not be chatty. Be directive.
+Rules:
+- If tired/wired/HRV low: Mandate Lymphatic Flush, Nidra, or Meels. FORBID heavy lifting.
+- If strong/HRV high: Authorize heavy lifts but remind "Easy Strength" (no grinding).
+- If pain (knee): Check collagen timing (45m pre-workout) and Box Pistol form (pause).
+- If pain (shoulder): Suggest Meels/Mill for ribcage opening (Gut axis).
+- Nutrition: Reminder of Carb Backloading on Thu/Sun.
+                `;
+
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{
+                                    text: `System Context: ${systemPrompt}. User Input: ${coachInput}`
+                                }]
+                            }]
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (data.candidates && data.candidates[0].content) {
+                        setCoachResponse(data.candidates[0].content.parts[0].text);
+                    } else {
+                        setCoachResponse("Coach is offline. Check connection.");
+                    }
+                } catch (error) {
+                    setCoachResponse("Error connecting to the Sentinel Coach.");
+                } finally {
+                    setIsCoachLoading(false);
+                }
+            };
+
             return (
                 <div className="max-w-4xl mx-auto p-4 md:p-8">
                     {/* Header */}
@@ -115,7 +178,7 @@
 
                     {/* Navigation */}
                     <nav className="flex flex-wrap gap-2 mb-8">
-                        {['schedule', 'sessions', 'supplements', 'mindset'].map(tab => (
+                        {['schedule', 'sessions', 'supplements', 'mindset', 'AI Coach'].map(tab => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
@@ -228,6 +291,45 @@
                                         <p className="text-sm text-slate-300 leading-relaxed">{item.action}</p>
                                     </div>
                                 ))}
+                            </div>
+                        )}
+
+                        {/* AI COACH TAB */}
+                        {activeTab === 'AI Coach' && (
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <div className="space-y-4">
+                                    <div className="bg-slate-950 rounded-lg p-6 border border-slate-800">
+                                        <h2 className="text-xl font-bold text-orange-500 mb-4 flex items-center gap-2">
+                                            <Icon name="sparkles" className="w-5 h-5" />
+                                            Sentinel Check-in
+                                        </h2>
+                                        <p className="text-sm text-slate-400 mb-4">
+                                            Tell the coach how you feel (HRV status, fatigue, pain, sleep). It will triage your day based on your Sentinel genotype.
+                                        </p>
+                                        <textarea
+                                            value={coachInput}
+                                            onChange={(e) => setCoachInput(e.target.value)}
+                                            placeholder="e.g., I slept poorly and my knee feels dry. Should I train?"
+                                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-200 mb-4 h-32 focus:ring-2 focus:ring-orange-500 outline-none"
+                                        />
+                                        <button
+                                            onClick={handleConsultCoach}
+                                            disabled={isCoachLoading || !coachInput.trim()}
+                                            className={`w-full py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-all ${isCoachLoading || !coachInput.trim() ? 'bg-slate-800 text-slate-500 cursor-not-allowed' : 'bg-orange-600 hover:bg-orange-700 text-white'}`}
+                                        >
+                                            {isCoachLoading ? 'Analyzing...' : 'Consult Coach ✨'}
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div className="bg-slate-950 rounded-lg p-6 border border-slate-800 min-h-[300px] flex flex-col">
+                                    <h3 className="text-lg font-bold text-slate-300 mb-4">Coach Advice</h3>
+                                    <div className="flex-1 bg-slate-900 rounded p-4 text-slate-200 border border-slate-800 whitespace-pre-wrap leading-relaxed">
+                                        {coachResponse || (
+                                            <span className="text-slate-500 italic">Advice will appear here...</span>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                         )}
                         
